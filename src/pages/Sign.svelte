@@ -1,5 +1,6 @@
 <script>
   import sha256 from "js-sha256";
+  import Header from "../components/Header.svelte";
 
   let form = {};
 
@@ -49,6 +50,8 @@
     window.location.reload();
   };
 </script>
+
+<Header />
 
 <div class="sign-box">
   <h1>회원가입</h1>

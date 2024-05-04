@@ -33,10 +33,10 @@
 
 {#if isLoading}
   <Loading />
-{:else if token === null}
+  <!-- {:else if token === null}
   <Login />
 {:else if token === "sign"}
-  <Sign />
+  <Sign /> -->
 {:else}
   <Router {routes} />
 {/if}
