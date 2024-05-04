@@ -1,0 +1,49 @@
+.maker-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.maker-box__info {
+  /* border: 1px solid black; */
+  padding: 10px 10px 10px 10px;
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
+}
+
+.maker-btn {
+  margin-top: 10px;
+}
+
+label {
+  font-weight: bolder;
+}
+
+.mWords {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.word {
+  /* 화면 크기에 따라 반으로 분할하고 간격을 조절합니다 */
+  /* width: calc(30% - 5px); */
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.word input {
+  flex: 1; /* 입력란이 너비를 최대한 확장하여 차지합니다 */
+}
+
+.wordlist {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}

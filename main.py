@@ -10,6 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import sqlite3
 from fastapi import FastAPI, HTTPException
 from starlette import status
+from typing import List
 
 # env 가져오기
 from dotenv import load_dotenv
@@ -49,19 +50,21 @@ cur = con.cursor()
 
 cur.execute(f"""
             CREATE TABLE IF NOT EXISTS games (
-                id INTEGER PRIMARY KEY,
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
                 title TEXT NOT NULL,
-                description TEXT NOT NULL
+                description TEXT NOT NULL,
+                user_id TEXT,
+                FOREIGN KEY (user_id) REFERENCES users(id)
             );
             """)
 cur = con.cursor()
 
 cur.execute(f"""
-            CREATE TABLE IF NOT EXISTS texts (
-                id INTEGER PRIMARY KEY,
+            CREATE TABLE IF NOT EXISTS words (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
                 word TEXT NOT NULL,
                 game_id INTEGER,
-                FOREIGN KEY (game_id) REFERENCES users(id)
+                FOREIGN KEY (game_id) REFERENCES games(id)
             );
             """)
 cur = con.cursor()
@@ -69,7 +72,6 @@ cur = con.cursor()
 # 토큰 발급
 load_dotenv()
 SECRET = os.getenv("TOKEN_KEY") # 인코딩키
-print(SECRET)
 manager = LoginManager(SECRET, '/login')
 
 # 오늘의 정답
@@ -78,6 +80,36 @@ answer = 'WORLD'
 @app.get('/answer')
 def get_answer():
     return {"answer" : answer}
+
+# 게임 만들기
+@app.post('/game')
+async def post_game(title:Annotated[str,Form()], 
+                description:Annotated[str,Form()], 
+                words:Annotated[List[str],Form()],
+                user=Depends(manager)): # 인증된 상태에만 허용
+    # 게임 정보 삽입
+    cur = con.cursor()
+    cur.execute(f"""
+                INSERT INTO games(title, description, user_id)
+                VALUES('{title}', '{description}', '{user['id']}');
+                """)
+    con.commit()
+
+    # 삽입된 게임의 id를 가져오기
+    cur = con.cursor()
+    cur.execute("SELECT last_insert_rowid();")
+    con.commit()
+    game_id = cur.fetchone()[0]
+
+    # 단어들을 삽입
+    for word in words:
+        cur.execute(f"""
+                    INSERT INTO words(word, game_id)
+                    VALUES('{word}', {game_id});
+                    """)
+        con.commit()
+        
+    return Response(status_code=status.HTTP_200_OK)
 
 # 회원가입한 정보 찾기
 @manager.user_loader()
@@ -93,6 +125,7 @@ def query_user(data):
                        SELECT * FROM users
                        WHERE {WHERE_STATEMENTS}
                        """).fetchone()
+    
     return user
 
 # 로그인

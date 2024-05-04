@@ -1,6 +1,5 @@
 <script>
   import sha256 from "js-sha256";
-  import { onMount } from "svelte";
   import Header from "../components/Header.svelte";
 
   let form = {};
