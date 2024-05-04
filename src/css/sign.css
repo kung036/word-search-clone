@@ -1,0 +1,21 @@
+.sign-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.sign-box__info {
+  border: 1px solid black;
+  padding: 10px 10px 10px 10px;
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
+}
+
+.sign-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}

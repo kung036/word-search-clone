@@ -14,6 +14,7 @@
     "vite": "^5.2.0"
   },
   "dependencies": {
+    "js-sha256": "^0.11.0",
     "svelte-spa-router": "^4.0.1"
   }
 }
