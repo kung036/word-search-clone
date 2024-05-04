@@ -6,3 +6,7 @@ main {
   gap: 5px;
   margin-bottom: 20px;
 }
+
+#textInput {
+  width: 300px;
+}
