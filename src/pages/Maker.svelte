@@ -43,12 +43,27 @@
       body: formData,
     });
 
-    // 로그인 요청 성공 시
+    // 게임 만들기 요청 성공 시
     if (res.status === 200) {
+      // 게임 아이디 저장
+      const data = await res.json();
+      window.localStorage.setItem("game_id", data.game_id);
+
       alert("게임 만들기에 성공했습니다.");
+      window.location.hash = "/game";
+    } else if (res.status === 401) {
+      alert("로그인이 필요합니다.");
+      handleLogin();
     } else {
       alert("게임 만들기에 실패했습니다.");
     }
+  };
+
+  // 로그인 페이지로 이동하기
+  const handleLogin = () => {
+    window.localStorage.removeItem("token");
+    window.location.hash = "/login";
+    window.location.reload();
   };
 
   // 컴포넌트가 마운트된 후에 실행되는 함수

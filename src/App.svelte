@@ -8,6 +8,7 @@
   import Loading from "./pages/Loading.svelte";
   import Main from "./pages/Main.svelte";
   import NotFound from "./pages/NotFound.svelte";
+  import Game from "./pages/Game.svelte";
 
   let isLoading = true;
   let token = window.localStorage.getItem("token"); // access token
@@ -24,6 +25,7 @@
     "/maker": Maker,
     "/sign": Sign,
     "/login": Login,
+    "/game": Game,
     "*": NotFound,
   };
 

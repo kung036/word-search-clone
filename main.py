@@ -74,9 +74,6 @@ load_dotenv()
 SECRET = os.getenv("TOKEN_KEY") # 인코딩키
 manager = LoginManager(SECRET, '/login')
 
-# 오늘의 정답
-answer = 'WORLD'
-
 @app.get('/answer')
 def get_answer():
     return {"answer" : answer}
@@ -109,6 +106,25 @@ async def post_game(title:Annotated[str,Form()],
                     """)
         con.commit()
         
+    return JSONResponse(content={'game_id': game_id}, status_code=status.HTTP_200_OK)
+
+# 게임 내용 조회
+@app.get('/game/{game_id}')
+async def get_game(game_id):
+    cur = con.cursor()
+    image_bytes = cur.execute(f"""
+        SELECT image FROM items WHERE id={item_id}
+    """).fetchone()[0]
+    response = JSONResponse()
+    return response
+
+# 토큰 유효성 확인
+@app.get('/user')
+async def check_user(user=Depends(manager)):
+    # 로그인 실패 시 에러 처리
+    if not user:
+        raise InvalidCredentialsException
+
     return Response(status_code=status.HTTP_200_OK)
 
 # 회원가입한 정보 찾기

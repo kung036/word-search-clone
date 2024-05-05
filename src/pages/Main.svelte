@@ -25,9 +25,24 @@
   };
 
   // 게임 만들기 페이지로 이동
-  const handleMaker = () => {
-    window.location.hash = "/maker";
-    window.location.reload();
+  const handleMaker = async () => {
+    // 회원 여부 확인
+    const serverUrl = import.meta.env.VITE_SERVER_URL;
+    const accessToken = window.localStorage.getItem("token");
+    const res = await fetch(serverUrl + "/user", {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    // 게임 만들기 요청 성공 시
+    if (res.status === 401) {
+      alert("로그인이 필요합니다.");
+      handleLogin();
+    } else if (res.status === 200) {
+      window.location.hash = "/maker";
+      window.location.reload();
+    }
   };
 
   let inputWidth = 200; // 초기 너비 설정
