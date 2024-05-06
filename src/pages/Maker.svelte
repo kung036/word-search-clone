@@ -1,6 +1,7 @@
 <script>
   import Header from "../components/Header.svelte";
   import { onMount, onDestroy } from "svelte";
+  import { handleLogin } from "../js/login";
   let form = {};
   form.words = [];
 
@@ -57,13 +58,6 @@
     } else {
       alert("게임 만들기에 실패했습니다.");
     }
-  };
-
-  // 로그인 페이지로 이동하기
-  const handleLogin = () => {
-    window.localStorage.removeItem("token");
-    window.location.hash = "/login";
-    window.location.reload();
   };
 
   // 컴포넌트가 마운트된 후에 실행되는 함수

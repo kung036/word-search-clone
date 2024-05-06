@@ -1,3 +1,4 @@
+from socket import gaierror
 from fastapi import FastAPI, UploadFile, Form, Response, Depends
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
@@ -108,14 +109,53 @@ async def post_game(title:Annotated[str,Form()],
         
     return JSONResponse(content={'game_id': game_id}, status_code=status.HTTP_200_OK)
 
+# game response dict
+def make_game_dict(game):
+    game_dict = {
+        "id" : game[0],
+        "title" : game[1],
+        "description" : game[2],
+        "user_id_fk" : game[3]
+    }
+    
+    return game_dict
+
+# words response dict
+def make_word_dict(word):
+    word_dict = {
+        "id" : word[0],
+        "word" : word[1],
+        "game_id" : word[2]
+    }
+    
+    return word_dict
+
 # 게임 내용 조회
 @app.get('/game/{game_id}')
 async def get_game(game_id):
     cur = con.cursor()
-    image_bytes = cur.execute(f"""
-        SELECT image FROM items WHERE id={item_id}
-    """).fetchone()[0]
-    response = JSONResponse()
+    game = cur.execute(f"""
+        SELECT * FROM games WHERE id={game_id}
+    """).fetchone()
+    
+    response = JSONResponse(
+        content=make_game_dict(game), 
+        status_code=status.HTTP_200_OK
+    )
+    return response
+
+# 게임 단어 조회
+@app.get('/word/{game_id}')
+async def get_game(game_id):
+    cur = con.cursor()
+    word = cur.execute(f"""
+        SELECT * FROM words WHERE game_id={game_id}
+    """).fetchone()
+    
+    response = JSONResponse(
+        content=make_word_dict(word), 
+        status_code=status.HTTP_200_OK
+    )
     return response
 
 # 토큰 유효성 확인

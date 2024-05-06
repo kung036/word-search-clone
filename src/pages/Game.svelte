@@ -1,33 +1,50 @@
 <script>
-  let game_id = window.localStorage.getItem("game_id");
+  import { createWordGrid, handleGameInfo } from "../js/game";
+  import { handleGameWords } from "../js/game";
+  import { onMount } from "svelte";
 
-  // 서버로부터 데이터받아오기
-  const handleSubmit = async (event) => {
-    const serverUrl = import.meta.env.VITE_SERVER_URL;
-    const accessToken = window.localStorage.getItem("token");
-    const res = await fetch("/game", {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-    console.log(res.status);
-    if (res.status == 401) {
-      alert("로그인이 필요합니다!");
-      handleLogin();
-      return;
-    }
+  // 격자 생성
+  let n = 7; // 초기 격자 크기
 
-    const data = await res.json();
-  };
+  $: columnTemplate = `repeat(${n}, 50px)`;
 
-  // 로그인 페이지로 이동하기
-  const handleLogin = () => {
-    window.localStorage.removeItem("token");
-    window.location.hash = "/login";
-    window.location.reload();
-  };
+  // 단어 출력
+  // 페이지가 로드되면 게임 단어 받아오기
+  let words = [];
+  // let word_grid = createEmptyGrid(n);
+  let word_grid = [];
+  onMount(async () => {
+    words = await handleGameWords();
+    word_grid = createWordGrid(n, words);
+    console.log(word_grid);
+
+    // // 단어 랜덤 배치
+    // for (const word of words) {
+    //   word_grid = placeWord(word, word_grid);
+    // }
+  });
 </script>
 
-<div>
-  {game_id}
+<h1>Play Word Game!!</h1>
+<button on:click={handleGameInfo}>게임 가져오기</button>
+<button on:click={handleGameWords}>단어 가져오기</button>
+
+<div class="game-aria">
+  <div class="grid-container">
+    {#each word_grid as row}
+      <div class="grid-row">
+        {#each row as cell}
+          <div class="grid-cell">{cell}</div>
+        {/each}
+      </div>
+    {/each}
+  </div>
+
+  <ol class="words">
+    {#each words as word}
+      <div>
+        {word}
+      </div>
+    {/each}
+  </ol>
 </div>

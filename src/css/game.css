@@ -6,3 +6,41 @@ main {
   gap: 5px;
   margin-bottom: 20px;
 }
+
+.grid-container {
+  display: grid;
+  padding: 5px;
+}
+
+.game-aria {
+  display: flex;
+  flex-direction: row;
+}
+
+.grid-item {
+  background-color: #fff; /* 격자 내부 색상 */
+  border: 1px solid #999; /* 격자 테두리 스타일 */
+  padding: 10px;
+  text-align: center;
+  display: flex;
+  flex-wrap: wrap;
+  font-weight: bolder;
+}
+
+.words {
+  /* display: flex;
+  flex-wrap: wrap; */
+  font-weight: bolder;
+}
+
+.grid-row {
+  display: flex; /* 행을 수평으로 배열하기 위해 flex 사용 */
+}
+
+.grid-cell {
+  border: 1px solid black; /* 셀 테두리 설정 */
+  padding: 15px 20px 15px 20px; /* 셀 안에 내용물과 테두리 간의 간격 설정 */
+  text-align: center; /* 셀 내용물 가운데 정렬 */
+  width: 10px;
+  height: 20px;
+}
