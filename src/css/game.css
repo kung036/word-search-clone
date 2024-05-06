@@ -25,12 +25,18 @@ main {
   display: flex;
   flex-wrap: wrap;
   font-weight: bolder;
+  justify-content: center;
+  width: 20px;
 }
 
 .words {
   /* display: flex;
   flex-wrap: wrap; */
   font-weight: bolder;
+}
+
+.selected-answer {
+  text-decoration: line-through;
 }
 
 .grid-row {
@@ -43,4 +49,46 @@ main {
   text-align: center; /* 셀 내용물 가운데 정렬 */
   width: 10px;
   height: 20px;
+}
+
+.selected-cell {
+  background-color: aqua;
+}
+
+.answer-cell {
+  background-color: gray;
+}
+
+/* 게임 링크 박스 */
+.game-link__box {
+  background-color: #f0f0f0;
+  border: 2px solid #ccc;
+  padding: 10px 30px 10px 30px;
+  border-radius: 5px;
+  margin-top: 10px;
+  font-size: 1.1em;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.game-link__box:hover {
+  background-color: #ccc; /* 마우스를 올렸을 때 배경색 변경 */
+  text-decoration: underline;
+  color: blue; /* 마우스를 올렸을 때 텍스트 색상 변경 */
+}
+
+/* 게임 링크 텍스트 */
+.game-link__text {
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.timer {
+  position: absolute;
+  top: 10px; /* 원하는 위치로 조정하세요 */
+  right: 10px; /* 원하는 위치로 조정하세요 */
+  background-color: #333;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 1.2em;
 }
