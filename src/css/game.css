@@ -92,3 +92,24 @@ main {
   border-radius: 5px;
   font-size: 1.2em;
 }
+
+.game-discription {
+  display: flex;
+  align-items: center;
+}
+
+.game-discription__info {
+  display: flex;
+  margin-left: 10px;
+}
+
+.game-link {
+  display: flex;
+  align-items: center;
+}
+
+.game-link__text {
+  display: flex;
+  margin-left: 10px;
+  margin-right: 10px;
+}
