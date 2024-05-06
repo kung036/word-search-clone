@@ -75,10 +75,6 @@ load_dotenv()
 SECRET = os.getenv("TOKEN_KEY") # 인코딩키
 manager = LoginManager(SECRET, '/login')
 
-@app.get('/answer')
-def get_answer():
-    return {"answer" : answer}
-
 # 게임 만들기
 @app.post('/game')
 async def post_game(title:Annotated[str,Form()], 
