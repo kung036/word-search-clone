@@ -70,6 +70,18 @@ cur.execute(f"""
             """)
 cur = con.cursor()
 
+cur.execute(f"""
+            CREATE TABLE IF NOT EXISTS score (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                score INTEGER NOT NULL,
+                game_id INTEGER,
+                user_id TEXT,
+                FOREIGN KEY (user_id) REFERENCES users(id),
+                FOREIGN KEY (game_id) REFERENCES games(id)
+            );
+            """)
+cur = con.cursor()
+
 # 토큰 발급
 load_dotenv()
 SECRET = os.getenv("TOKEN_KEY") # 인코딩키
@@ -111,7 +123,7 @@ def make_game_dict(game):
         "id" : game[0],
         "title" : game[1],
         "description" : game[2],
-        "user_id_fk" : game[3]
+        "user_id" : game[3]
     }
     
     return game_dict
@@ -153,6 +165,48 @@ async def get_game(game_id):
         status_code=status.HTTP_200_OK
     )
     return response
+
+# 점수 생성
+@app.post('/score/{game_id}')
+async def post_score(game_id,
+                     score:Annotated[str,Form()],
+                     user=Depends(manager)):
+    user_id = user['id']
+    cur = con.cursor()
+    # score 테이블에서 해당 게임과 유저의 점수를 조회
+    cur.execute("SELECT * FROM score WHERE game_id=? AND user_id=?", (game_id, user_id))
+    existing_score = cur.fetchone()
+    
+    if existing_score:
+        # 이미 기존에 점수가 있는 경우, 점수만 업데이트
+        cur.execute("UPDATE score SET score=? WHERE game_id=? AND user_id=?", (score, game_id, user_id))
+    else:
+        # 새로운 점수 추가
+        cur.execute("INSERT INTO score (score, game_id, user_id) VALUES (?, ?, ?)", (score, game_id, user_id))
+    
+    con.commit()  # 변경사항을 커밋
+    
+    return Response(status_code=status.HTTP_200_OK)
+
+# 점수 가져오기
+@app.get('/score/{game_id}')
+async def post_score(game_id,
+                     user=Depends(manager)):
+    cur = con.cursor()
+    cur.execute("""
+        SELECT u.name, s.score 
+        FROM score s 
+        JOIN users u ON s.user_id = u.id 
+        WHERE s.game_id=? 
+        ORDER BY s.score ASC
+    """, (game_id,))
+    scores = cur.fetchall()
+
+    # 에러 처리
+    if not scores:
+        raise HTTPException(status_code=404, detail="Game scores not found")
+
+    return {"scores": scores[:3]}
 
 # 토큰 유효성 확인
 @app.get('/user')

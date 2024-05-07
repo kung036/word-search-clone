@@ -4,7 +4,12 @@
   import { isDiagonalOrStraight, toggleCellClass } from "../js/click-word";
   import { createWordGrid } from "../js/game";
   import { changeGamePage } from "../js/game-page";
-  import { handleGameWords, handleGameInfo } from "../js/game-server";
+  import {
+    handleGameWords,
+    handleGameInfo,
+    handleScore,
+    handleGetScore,
+  } from "../js/game-server";
   import { onMount } from "svelte";
 
   const game_id = window.localStorage.getItem("game_id");
@@ -21,9 +26,11 @@
   let words = [];
   let word_grid = [];
   let gameStarted = false;
+  let gameFinish = false;
 
   // 타이머 정보
   let timer = 0;
+  let timerId;
 
   // 리액티브 변수로 타이머 표시 형식을 분:초로 변환
   let formattedTimer = formatTimer();
@@ -32,11 +39,14 @@
   let selectedCells = [];
   let selectedValues = [];
 
-  // 찾은 단어
-  let findWords = 0;
+  // 찾은 단어수
+  let countFindWords = 0;
+
+  // score
+  let scores;
 
   // 선택된 셀을 지우는 함수
-  function clearSelectedCells() {
+  async function clearSelectedCells() {
     // 정답 여부 확인
     const selectAnswer = selectedValues.join("");
     if (words.includes(selectAnswer)) {
@@ -54,13 +64,19 @@
         cell.classList.add("answer-cell");
       });
 
-      findWords++;
+      countFindWords++;
 
       // 모든 단어를 찾은지 확인 → 게임 종료
-      if (findWords === words.length) {
-        // 스코어
-        // 등수
+      if (countFindWords === words.length) {
+        // 타이머 종료
+        clearInterval(timerId);
+
         // 게임 종료 안내
+        gameFinish = true;
+
+        // 스코어
+        handleScore(formattedTimer);
+        scores = await handleGetScore();
       }
     }
 
@@ -76,7 +92,7 @@
   }
 
   // 게임 시작
-  function startGame() {
+  async function startGame() {
     gameStarted = true;
 
     // 단어 그리드 출력
@@ -88,7 +104,7 @@
 
   // 타이머 시작
   function startTimer() {
-    setInterval(() => {
+    timerId = setInterval(() => {
       timer++;
       formattedTimer = formatTimer();
     }, 1000);
@@ -109,6 +125,11 @@
 
     // 단어 가져오기
     words = await handleGameWords();
+
+    // 스코어 받아오기
+    await handleGetScore().then((data) => {
+      scores = data;
+    });
   });
 
   // 격자 선택
@@ -126,6 +147,7 @@
 
 <Header />
 
+<!-- 타이머 -->
 <div>
   <h1 class="game-title">{title}</h1>
   <div class="game-description">
@@ -138,6 +160,7 @@
 </div>
 
 {#if gameStarted}
+  <!-- 격자 -->
   <div class="game-aria">
     <div class="grid-container">
       {#each word_grid as row, rowIndex}
@@ -162,18 +185,52 @@
     </div>
 
     <div>
+      <!-- 단어 선택 버튼 -->
       <ol>
         <button on:click={clearSelectedCells}>단어 선택</button>
       </ol>
+      <!-- 단어 출력 -->
       <ol class="words">
         {#each words as word}
           <div>{word}</div>
         {/each}
       </ol>
+
+      <!-- 스코어 표시 -->
+      <div class="score">
+        <ol>
+          <h2>스코어</h2>
+          {#each scores as score, index}
+            <div>
+              {index + 1}위 {score.name}: {score.score}
+            </div>
+          {/each}
+        </ol>
+      </div>
     </div>
   </div>
 {:else}
   <button on:click={startGame}>게임 시작</button>
+{/if}
+
+{#if gameFinish}
+  <div class="container">
+    <div class="centered">
+      <!-- 게임 진행 메시지 및 스코어 표시 -->
+      <h1>!! Game Finish !!</h1>
+      <div class="score">
+        <h2>스코어</h2>
+        {#each scores as score, index}
+          <div>
+            {index + 1}위 {score.name}: {score.score}
+          </div>
+        {/each}
+      </div>
+      <button on:click={() => changeGamePage(url)} class="game-link__box">
+        again!
+      </button>
+    </div>
+  </div>
 {/if}
 
 <div class="game-link">

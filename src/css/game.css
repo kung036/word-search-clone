@@ -24,7 +24,6 @@ main {
   padding: 10px;
   text-align: center;
   display: flex;
-  flex-wrap: wrap;
   font-weight: bolder;
   justify-content: center;
   width: 20px;
@@ -137,4 +136,31 @@ main {
   font-weight: bold;
   margin-left: 10px;
   margin-right: 10px;
+}
+
+.score {
+  border-top: 2px solid #ccc;
+  justify-content: center;
+  align-items: center;
+}
+
+/* .container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+} */
+.container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  width: 350px;
+}
+
+.centered {
+  text-align: center; /* 내용 가운데 정렬 */
+  border: 2px solid #ccc; /* 테두리 스타일 */
+  padding: 20px; /* 내부 여백 설정 */
 }
