@@ -96,6 +96,8 @@ export const handleGetScore = async () => {
     alert("로그인이 필요합니다!");
     handleLogin();
     return;
+  } else if (res.status === 404) {
+    return [];
   }
 
   const data = await res.json();
