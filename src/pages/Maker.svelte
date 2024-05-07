@@ -27,6 +27,25 @@
       return;
     }
 
+    // 단어들이 알파벳이거나 같은 단어가 있으면 생성 안됨
+    for (const word in form.words) {
+      console.log("word : ", word);
+      if (!/^[a-zA-Z]+$/.test(word)) {
+        alert("영어만 입력 가능합니다");
+        return;
+      }
+      if (form.words.includes(word)) {
+        alert("서로 다른 단어를 입력하세요");
+        return;
+      }
+    }
+
+    // word 대문자로 변경
+    for (let i = 0; i < form.words.length; i++) {
+      const uppercaseWords = form.words[i].toUpperCase(); // 현재 단어를 대문자로 변환
+      form.words[i] = uppercaseWords; // 변환된 단어로 해당 인덱스의 요소를 교체
+    }
+
     // FormData 형태로 변경
     const formData = new FormData();
     for (const key in form) {
