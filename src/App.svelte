@@ -9,6 +9,7 @@
   import Main from "./pages/Main.svelte";
   import NotFound from "./pages/NotFound.svelte";
   import Game from "./pages/Game.svelte";
+  import MyGame from "./pages/MyGame.svelte";
 
   let isLoading = true;
   let token = window.localStorage.getItem("token"); // access token
@@ -26,6 +27,7 @@
     "/sign": Sign,
     "/login": Login,
     "/game": Game,
+    "/myGame": MyGame,
     "*": NotFound,
   };
 

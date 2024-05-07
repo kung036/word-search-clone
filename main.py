@@ -138,6 +138,20 @@ def make_word_dict(word):
     
     return word_dict
 
+# 유저가 만든 게임 조회
+@app.get('/games')
+async def get_game(user=Depends(manager)): # 인증된 상태에만 허용
+    cur = con.cursor()
+    games = cur.execute(f"""
+        SELECT * FROM games WHERE user_id='{user['id']}'
+    """).fetchall()
+    
+    response = JSONResponse(
+        jsonable_encoder(dict(game) for game in games),
+        status_code=status.HTTP_200_OK
+    )
+    return response
+
 # 게임 내용 조회
 @app.get('/game/{game_id}')
 async def get_game(game_id):

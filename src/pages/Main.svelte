@@ -4,6 +4,7 @@
   import { handleLogin } from "../js/login";
   import { changeGamePage } from "../js/game-page";
   import { handleLogout } from "../js/logout";
+  import { handleMyGame } from "../js/game-list";
 
   const token = window.localStorage.getItem("token");
 
@@ -82,6 +83,7 @@
     <div class="button-box">
       <button on:click={handleMaker} id="logout-btn">게임 만들기</button>
       <button on:click={handleLogout} id="logout-btn">로그아웃</button>
+      <button on:click={handleMyGame} id="logout-btn">나의 게임</button>
     </div>
   {/if}
 </main>
