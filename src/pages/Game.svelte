@@ -1,5 +1,6 @@
 <script>
   import Header from "../components/Header.svelte";
+  import { copyToClipboard } from "../js/click-share";
   import { isDiagonalOrStraight, toggleCellClass } from "../js/click-word";
   import { createWordGrid } from "../js/game";
   import { changeGamePage } from "../js/game-page";
@@ -125,11 +126,11 @@
 
 <Header />
 
-<div class="game-title">
-  <h1>{title}</h1>
-  <div class="game-discription">
+<div>
+  <h1 class="game-title">{title}</h1>
+  <div class="game-description">
     <h3>description :</h3>
-    <div class="game-discription__info">
+    <div class="game-description__info">
       {description}
     </div>
   </div>
@@ -178,6 +179,9 @@
 <div class="game-link">
   <div class="game-link__text">게임 링크</div>
   <button on:click={() => changeGamePage(url)} class="game-link__box">
-    http://localhost:5173/#/game/{game_id}
+    {url}
+  </button>
+  <button on:click={() => copyToClipboard(url)} class="share-btn">
+    <img class="share-img" src="assets/share.svg" alt="" />
   </button>
 </div>
