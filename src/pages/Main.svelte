@@ -1,26 +1,16 @@
 <script>
   import Header from "../components/Header.svelte";
   import { onMount, onDestroy } from "svelte";
+  import { handleLogin } from "../js/login";
+  import { changeGamePage } from "../js/game-page";
+  import { handleLogout } from "../js/logout";
 
   const token = window.localStorage.getItem("token");
-
-  // 로그인 페이지로 이동하기
-  const handleLogin = () => {
-    window.localStorage.removeItem("token");
-    window.location.hash = "/login";
-    window.location.reload();
-  };
 
   // 회원가입 페이지로 이동하기
   const handleSign = () => {
     window.localStorage.setItem("token", "sign");
     window.location.hash = "/sign";
-    window.location.reload();
-  };
-
-  // 로그아웃
-  const handleLogout = () => {
-    window.localStorage.removeItem("token");
     window.location.reload();
   };
 
@@ -44,6 +34,13 @@
       window.location.reload();
     }
   };
+
+  // 게임링크로 이동
+  let gameLink = "";
+  function handleSubmit() {
+    // 폼이 제출되었을 때 호출되는 함수
+    changeGamePage(gameLink); // changeGamePage 함수에 입력된 게임 링크 전달
+  }
 
   let inputWidth = 200; // 초기 너비 설정
 
@@ -72,14 +69,16 @@
     <button on:click={handleLogin} id="login-btn">로그인</button>
     <button on:click={handleSign} id="sign-btn">회원가입</button>
   {:else}
-    <div class="game-link-input">
+    <form class="game-link-input" on:submit|preventDefault={handleSubmit}>
       게임링크 :
       <input
         type="text"
         id="textInput"
         placeholder="http://localhost:5173/..."
+        bind:value={gameLink}
       />
-    </div>
+      <button type="submit">입력</button>
+    </form>
     <div class="button-box">
       <button on:click={handleMaker} id="logout-btn">게임 만들기</button>
       <button on:click={handleLogout} id="logout-btn">로그아웃</button>

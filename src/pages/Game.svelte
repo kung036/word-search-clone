@@ -1,4 +1,5 @@
 <script>
+  import Header from "../components/Header.svelte";
   import { isDiagonalOrStraight, toggleCellClass } from "../js/click-word";
   import { createWordGrid } from "../js/game";
   import { changeGamePage } from "../js/game-page";
@@ -121,6 +122,8 @@
     }
   }
 </script>
+
+<Header />
 
 <div class="game-title">
   <h1>{title}</h1>
